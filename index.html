@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Bill Generator</title>
+    <title>Modern Lab Bill Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Base Page Setup */
         body {
             background-color: #f3f4f6;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
+            color: #111827;
         }
 
         /* The A4 Paper Look for Preview */
@@ -18,85 +20,212 @@
             background: white;
             width: 210mm;
             min-height: 297mm;
-            padding: 15mm;
+            padding: 0; /* Reset padding, we handle it inside to maximize print control */
             margin: 0 auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             position: relative;
-            color: #1f2937;
             box-sizing: border-box;
+            overflow: hidden; /* Clean edges */
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Invoice Specific Styles */
-        .invoice-header {
-            border-bottom: 2px solid #374151;
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
+        /* Inner container for margins */
+        .page-content {
+            padding: 15mm;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Modern Invoice Styles --- */
+        
+        /* Header */
+        .brand-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 1.5rem;
+        }
+
+        .lab-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e40af; /* Medical Blue */
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .lab-details {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .invoice-meta {
+            text-align: right;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9ca3af;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Patient Info Grid */
+        .patient-card {
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem 2rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
         }
 
-        .info-row {
+        .info-group {
             display: flex;
+            flex-direction: column;
         }
 
         .info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
             font-weight: 600;
-            width: 100px;
-            flex-shrink: 0;
+            margin-bottom: 0.25rem;
         }
 
         .info-value {
-            flex-grow: 1;
-            border-bottom: 1px dotted #d1d5db;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        /* Modern Table */
+        .bill-table-container {
+            margin-bottom: 2rem;
         }
 
         .bill-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
         }
 
         .bill-table th {
-            border-top: 2px solid #374151;
-            border-bottom: 2px solid #374151;
-            padding: 0.5rem;
             text-align: left;
-            font-weight: 700;
+            padding: 0.75rem 1rem;
+            background-color: #1e40af;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
+        .bill-table th:first-child { border-top-left-radius: 0.375rem; }
+        .bill-table th:last-child { border-top-right-radius: 0.375rem; text-align: right; }
+
         .bill-table td {
-            padding: 0.5rem;
+            padding: 0.75rem 1rem;
             border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        .bill-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .bill-table tr:nth-child(even) {
+            background-color: #f9fafb;
         }
 
         .bill-table td.amount-col {
             text-align: right;
-        }
-
-        .total-section {
-            border-top: 2px solid #374151;
-            padding-top: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .amount-in-words {
-            font-style: italic;
-            margin-bottom: 1rem;
             font-weight: 500;
+            font-variant-numeric: tabular-nums;
         }
 
-        .footer-section {
-            margin-top: 2rem;
+        /* Summary Section */
+        .summary-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 1rem;
+            page-break-inside: avoid;
+        }
+
+        .amount-words {
+            width: 55%;
+            font-size: 0.85rem;
+            color: #4b5563;
+            font-style: italic;
+            padding-top: 1rem;
+        }
+
+        .totals-box {
+            width: 40%;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .total-row.final {
+            border-top: 2px solid #e5e7eb;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        .invoice-footer {
+            margin-top: auto; /* Pushes to bottom of page-content */
+            padding-top: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+        }
+
+        .signature-box {
+            text-align: center;
+            width: 200px;
+        }
+
+        .signature-line {
+            border-top: 1px solid #374151;
+            margin-top: 3rem;
+            padding-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         /* Controls Panel */
@@ -104,133 +233,151 @@
             height: 100vh;
             overflow-y: auto;
         }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-paid { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-due { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
-        /* Print Media Query - THE MOST IMPORTANT PART */
+        /* --- PRINT SETTINGS (CRITICAL FOR NO WATERMARK) --- */
         @media print {
+            @page {
+                margin: 0; /* Removes browser header/footer/url/date */
+                size: auto;
+            }
+
             body {
                 background: white;
                 margin: 0;
                 padding: 0;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             
-            /* Hide the sidebar/controls */
-            #controls-column, #print-btn-container {
-                display: none !important;
-            }
+            #controls-column { display: none !important; }
 
-            /* Make the invoice take up the full page */
             #preview-column {
                 width: 100% !important;
                 padding: 0 !important;
                 height: auto !important;
                 overflow: visible !important;
+                background: white;
             }
 
             .a4-page {
                 box-shadow: none;
                 margin: 0;
                 width: 100%;
-                min-height: auto;
-                padding: 10mm; /* Adjust for printer margins */
+                min-height: 100vh; /* Ensure full height */
+                border: none;
             }
-
-            /* Ensure background colors print if checked in settings */
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            
+            .page-content {
+                padding: 10mm 15mm; /* Physical print margins */
+            }
         }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
     <!-- LEFT SIDE: CONTROLS -->
-    <div id="controls-column" class="w-1/3 bg-white border-r border-gray-200 controls-panel p-6 shadow-lg z-10">
+    <div id="controls-column" class="w-1/3 bg-white border-r border-gray-200 controls-panel p-6 shadow-lg z-20">
         <h2 class="text-2xl font-bold mb-6 text-indigo-700 flex items-center">
-            <i class="fas fa-flask mr-2"></i> Lab Bill Config
+            <i class="fas fa-file-invoice-dollar mr-2"></i> Bill Settings
         </h2>
 
         <!-- Tab Navigation -->
-        <div class="flex mb-4 border-b">
-            <button onclick="switchTab('lab')" class="tab-btn active px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600 focus:outline-none">Lab Info</button>
-            <button onclick="switchTab('patient')" class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600 focus:outline-none">Patient</button>
-            <button onclick="switchTab('tests')" class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600 focus:outline-none">Tests</button>
+        <div class="flex mb-6 border-b border-gray-200">
+            <button onclick="switchTab('lab')" class="tab-btn active px-4 py-2 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 focus:outline-none transition-colors">Lab Details</button>
+            <button onclick="switchTab('patient')" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-500 hover:text-indigo-600 focus:outline-none transition-colors">Patient</button>
+            <button onclick="switchTab('tests')" class="tab-btn px-4 py-2 text-sm font-semibold text-gray-500 hover:text-indigo-600 focus:outline-none transition-colors">Test Items</button>
         </div>
 
         <!-- LAB INFO SECTION -->
-        <div id="tab-lab" class="space-y-4 tab-content">
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Header Type</label>
+        <div id="tab-lab" class="space-y-5 tab-content">
+            <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Header Style</label>
                 <div class="flex gap-4">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="headerType" value="text" checked onchange="toggleHeaderType()" class="text-indigo-600">
-                        <span>Text Header</span>
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border shadow-sm w-1/2 justify-center hover:border-indigo-300">
+                        <input type="radio" name="headerType" value="text" checked onchange="toggleHeaderType()" class="text-indigo-600 accent-indigo-600">
+                        <span class="text-sm font-medium">Text</span>
                     </label>
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="radio" name="headerType" value="image" onchange="toggleHeaderType()" class="text-indigo-600">
-                        <span>Upload Logo/Image</span>
+                    <label class="flex items-center space-x-2 cursor-pointer bg-white px-3 py-2 rounded border shadow-sm w-1/2 justify-center hover:border-indigo-300">
+                        <input type="radio" name="headerType" value="image" onchange="toggleHeaderType()" class="text-indigo-600 accent-indigo-600">
+                        <span class="text-sm font-medium">Logo</span>
                     </label>
                 </div>
             </div>
 
             <!-- Text Header Inputs -->
-            <div id="text-header-inputs" class="space-y-3">
+            <div id="text-header-inputs" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Lab Name</label>
-                    <input type="text" id="input-lab-name" class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="e.g. AJITH CLINICAL LAB" value="CITY DIAGNOSTIC CENTRE">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Lab Name</label>
+                    <input type="text" id="input-lab-name" class="w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition" value="CITY DIAGNOSTIC CENTRE">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Address / Subtitle</label>
-                    <textarea id="input-lab-address" class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" rows="2" placeholder="Address line 1, Phone number...">123, Main Road, City Name - 560001&#10;Ph: 9988776655 | Email: lab@example.com</textarea>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Address & Contact</label>
+                    <textarea id="input-lab-address" class="w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition" rows="3">123, Health Avenue, Medical District&#10;Bangalore - 560001&#10;Ph: 9988776655 | Email: lab@citydiag.com</textarea>
                 </div>
             </div>
 
             <!-- Image Header Inputs -->
-            <div id="image-header-inputs" class="hidden space-y-3">
-                <label class="block text-xs font-bold text-gray-500 uppercase">Upload Header Image</label>
-                <input type="file" id="input-header-img" accept="image/*" class="w-full p-2 border rounded bg-gray-50" onchange="handleImageUpload(this)">
-                <p class="text-xs text-gray-500">Recommended: A wide image (approx 800x150px)</p>
+            <div id="image-header-inputs" class="hidden space-y-4">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition relative">
+                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-600 font-medium">Click to upload logo</p>
+                    <input type="file" id="input-header-img" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleImageUpload(this)">
+                </div>
+                <p class="text-xs text-gray-400 text-center">Recommended: 800x150px PNG or JPG</p>
             </div>
             
-            <div class="pt-4 border-t">
-                <label class="block text-xs font-bold text-gray-500 uppercase">Currency Symbol</label>
-                <input type="text" id="input-currency" class="w-20 p-2 border rounded" value="₹">
+            <div class="pt-4 border-t border-gray-200">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Currency Symbol</label>
+                <input type="text" id="input-currency" class="w-20 p-2 border rounded text-center font-mono" value="₹">
             </div>
         </div>
 
         <!-- PATIENT INFO SECTION -->
-        <div id="tab-patient" class="space-y-3 hidden tab-content">
-            <div class="grid grid-cols-2 gap-3">
+        <div id="tab-patient" class="space-y-4 hidden tab-content">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Bill No.</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Bill No.</label>
                     <input type="text" id="input-bill-no" class="w-full p-2 border rounded" value="1-124283">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Date</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Date & Time</label>
                     <input type="datetime-local" id="input-date" class="w-full p-2 border rounded">
                 </div>
             </div>
             
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase">Patient Name</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Patient Name</label>
                 <div class="flex gap-2">
-                    <select id="input-title" class="p-2 border rounded w-20">
+                    <select id="input-title" class="p-2 border rounded bg-gray-50 w-24">
                         <option>Mr.</option>
                         <option selected>Mrs.</option>
                         <option>Ms.</option>
                         <option>Mast.</option>
                         <option>Baby</option>
                     </select>
-                    <input type="text" id="input-name" class="flex-1 p-2 border rounded" value="SUDHA L">
+                    <input type="text" id="input-name" class="flex-1 p-2 border rounded font-medium" value="SUDHA L">
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Age</label>
-                    <input type="text" id="input-age" class="w-full p-2 border rounded" value="41">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Age</label>
+                    <input type="text" id="input-age" class="w-full p-2 border rounded" value="41 Years">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Sex</label>
-                    <select id="input-sex" class="w-full p-2 border rounded">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Sex</label>
+                    <select id="input-sex" class="w-full p-2 border rounded bg-white">
                         <option>Male</option>
                         <option selected>Female</option>
                         <option>Other</option>
@@ -239,48 +386,40 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase">Patient ID / UHID</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Patient ID / UHID</label>
                 <input type="text" id="input-pid" class="w-full p-2 border rounded" value="119828">
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase">Referral By</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Referral By</label>
                 <input type="text" id="input-referral" class="w-full p-2 border rounded" value="Dr. Self / Walk-in">
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase">Contact No.</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Contact No.</label>
                 <input type="text" id="input-contact" class="w-full p-2 border rounded" value="9047313909">
-            </div>
-             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase">Status</label>
-                 <select id="input-status" class="w-full p-2 border rounded">
-                    <option selected>Completed</option>
-                    <option>Pending</option>
-                    <option>Partial</option>
-                </select>
             </div>
         </div>
 
         <!-- TESTS SECTION -->
         <div id="tab-tests" class="space-y-4 hidden tab-content">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="font-bold text-gray-700">Test Items</h3>
-                <button onclick="addTestRow()" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700 transition">
-                    <i class="fas fa-plus"></i> Add Test
+            <div class="flex justify-between items-end mb-2">
+                <label class="block text-xs font-bold text-gray-500 uppercase">Line Items</label>
+                <button onclick="addTestRow()" class="text-indigo-600 text-xs font-bold hover:text-indigo-800 transition">
+                    <i class="fas fa-plus-circle"></i> ADD NEW
                 </button>
             </div>
 
-            <div id="tests-container" class="space-y-2">
+            <div id="tests-container" class="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
                 <!-- Test rows will be added here by JS -->
             </div>
             
-            <div class="border-t pt-4 mt-4 bg-gray-50 p-3 rounded">
-                <h3 class="font-bold text-gray-700 mb-2">Payment Details</h3>
+            <div class="border-t pt-4 mt-4 bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-bold text-gray-700 text-sm mb-3">Payment Status</h3>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                         <label class="block text-xs font-bold text-gray-500 uppercase">Mode</label>
-                         <select id="input-pay-mode" class="w-full p-2 border rounded bg-white">
+                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Mode</label>
+                         <select id="input-pay-mode" class="w-full p-2 border rounded bg-white text-sm">
                              <option selected>CASH</option>
                              <option>UPI</option>
                              <option>CARD</option>
@@ -288,110 +427,124 @@
                          </select>
                     </div>
                      <div>
-                         <label class="block text-xs font-bold text-gray-500 uppercase">Paid Amount</label>
-                         <input type="number" id="input-paid" class="w-full p-2 border rounded" value="0" oninput="updateBill()">
+                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Received Amount</label>
+                         <input type="number" id="input-paid" class="w-full p-2 border rounded text-sm" value="0" oninput="updateBill()">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-8 pt-4 border-t">
-            <button onclick="window.print()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition flex items-center justify-center">
-                <i class="fas fa-print mr-2"></i> Print Bill
+        <div class="mt-6 pt-4 border-t">
+            <button onclick="window.print()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:bg-indigo-700 hover:shadow-lg transition flex items-center justify-center transform active:scale-95">
+                <i class="fas fa-print mr-2"></i> Print Invoice
             </button>
+            <p class="text-xs text-center text-gray-400 mt-2">Default headers removed automatically.</p>
         </div>
     </div>
 
     <!-- RIGHT SIDE: PREVIEW -->
-    <div id="preview-column" class="w-2/3 bg-gray-200 h-screen overflow-y-auto flex justify-center py-10 relative">
+    <div id="preview-column" class="w-2/3 bg-gray-100 h-screen overflow-y-auto flex justify-center py-8 relative">
         
         <!-- The Actual Invoice Page -->
-        <div id="invoice" class="a4-page text-sm">
-            
-            <!-- Dynamic Header -->
-            <div class="invoice-header flex justify-between items-start" id="view-header-container">
-                <!-- Will be populated by JS (either text or image) -->
-            </div>
+        <div id="invoice" class="a4-page">
+            <div class="page-content">
+                
+                <!-- 1. HEADER -->
+                <div class="brand-section" id="view-header-container">
+                    <!-- JS Injects Logo or Text Here -->
+                </div>
 
-            <!-- Patient Grid -->
-            <div class="info-grid">
-                <div class="info-row">
-                    <span class="info-label">Bill No.:</span>
-                    <span class="info-value" id="view-bill-no"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Date:</span>
-                    <span class="info-value" id="view-date"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Name:</span>
-                    <span class="info-value" id="view-name"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Sex / Age:</span>
-                    <span class="info-value" id="view-sex-age"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Referral:</span>
-                    <span class="info-value" id="view-referral"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Contact:</span>
-                    <span class="info-value" id="view-contact"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Status:</span>
-                    <span class="info-value" id="view-status"></span>
-                </div>
-                 <div class="info-row">
-                    <span class="info-label">ID / UHID:</span>
-                    <span class="info-value" id="view-pid"></span>
-                </div>
-            </div>
-
-            <!-- Tests Table -->
-            <table class="bill-table">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">Sr.</th>
-                        <th>Test Name</th>
-                        <th class="amount-col" style="width: 120px;">Price (<span class="currency-symbol">₹</span>)</th>
-                    </tr>
-                </thead>
-                <tbody id="view-test-body">
-                    <!-- Rows generated by JS -->
-                </tbody>
-                <tfoot>
-                    <tr class="total-section">
-                        <td colspan="2" style="text-align: right; font-weight: bold; padding-top: 10px;">Total Amount:</td>
-                        <td class="amount-col" style="font-weight: bold; padding-top: 10px;" id="view-total">0.00</td>
-                    </tr>
-                </tfoot>
-            </table>
-
-            <div class="amount-in-words">
-                Payable Amount (in words): <span id="view-words">Zero only</span>
-            </div>
-
-            <!-- Payment Summary & Signature -->
-            <div class="flex justify-between mt-8 border-t border-gray-300 pt-4">
-                <div class="w-1/2">
-                    <div class="mb-1"><span class="font-semibold">Payment Mode:</span> <span id="view-pay-mode">CASH</span></div>
-                    <div class="mb-1"><span class="font-semibold">Paid Amount:</span> <span class="currency-symbol">₹</span> <span id="view-paid">0.00</span></div>
-                    <div class="mb-1 text-red-600" id="balance-container"><span class="font-semibold">Balance Due:</span> <span class="currency-symbol">₹</span> <span id="view-balance">0.00</span></div>
-                </div>
-                <div class="w-1/2 text-right flex flex-col items-end justify-end">
-                    <div class="h-16"></div> <!-- Space for signature -->
-                    <div class="border-t border-black w-48 text-center pt-1 font-semibold">
-                        Cashier's Signature
+                <!-- 2. PATIENT CARD -->
+                <div class="patient-card">
+                    <div class="info-grid">
+                        <div class="info-group">
+                            <span class="info-label">Patient Name</span>
+                            <span class="info-value text-indigo-900" id="view-name"></span>
+                        </div>
+                        <div class="info-group">
+                            <span class="info-label">Age / Gender</span>
+                            <span class="info-value" id="view-sex-age"></span>
+                        </div>
+                        <div class="info-group">
+                            <span class="info-label">Patient ID</span>
+                            <span class="info-value" id="view-pid"></span>
+                        </div>
+                        <div class="info-group">
+                            <span class="info-label">Referred By</span>
+                            <span class="info-value" id="view-referral"></span>
+                        </div>
+                        <div class="info-group">
+                            <span class="info-label">Contact No.</span>
+                            <span class="info-value" id="view-contact"></span>
+                        </div>
+                         <div class="info-group">
+                            <span class="info-label">Payment Mode</span>
+                            <span class="info-value uppercase" id="view-pay-mode">CASH</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-8 text-center text-xs text-gray-500">
-                <p>Use our online portal for downloading reports.</p>
-                <p>*** End of Report ***</p>
-            </div>
+                <!-- 3. TABLE -->
+                <div class="bill-table-container">
+                    <table class="bill-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th>Test Description</th>
+                                <th class="amount-col" style="width: 140px;">Amount (<span class="currency-symbol">₹</span>)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="view-test-body">
+                            <!-- Rows generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 4. TOTALS & WORDS -->
+                <div class="summary-section">
+                    <div class="amount-words">
+                        <div class="text-xs font-bold text-gray-500 uppercase mb-1">Amount In Words</div>
+                        <div id="view-words" class="text-gray-800 font-medium">Zero Only</div>
+                        <div class="mt-4 text-xs text-gray-400">
+                            Results are to be correlated with clinical conditions.
+                        </div>
+                    </div>
+
+                    <div class="totals-box">
+                        <div class="total-row">
+                            <span>Sub Total</span>
+                            <span><span class="currency-symbol">₹</span> <span id="view-subtotal">0.00</span></span>
+                        </div>
+                        <!-- Can add tax row here if needed later -->
+                        <div class="total-row final">
+                            <span>Total</span>
+                            <span><span class="currency-symbol">₹</span> <span id="view-total">0.00</span></span>
+                        </div>
+                        <div class="total-row" style="margin-top: 1rem; color: #166534;">
+                            <span>Paid</span>
+                            <span><span class="currency-symbol">₹</span> <span id="view-paid">0.00</span></span>
+                        </div>
+                        <div class="total-row" id="balance-row" style="color: #991b1b; font-weight: 600;">
+                            <span>Balance Due</span>
+                            <span><span class="currency-symbol">₹</span> <span id="view-balance">0.00</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. FOOTER -->
+                <div class="invoice-footer">
+                    <div class="text-xs text-gray-400">
+                        <p>Thank you for choosing us.</p>
+                        <p class="mt-1">This is a computer generated bill.</p>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line">
+                            Authorized Signature
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End Page Content -->
         </div>
     </div>
 
@@ -425,12 +578,9 @@
 
         // --- TABS LOGIC ---
         function switchTab(tabName) {
-            // Hide all content
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // Show selected
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             
-            // Update buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600', 'active');
                 btn.classList.add('text-gray-500');
@@ -470,18 +620,18 @@
             
             tests.forEach((test, index) => {
                 const row = document.createElement('div');
-                row.className = "flex gap-2 items-center bg-white p-2 rounded shadow-sm border";
+                row.className = "flex gap-2 items-center bg-gray-50 p-2 rounded border border-gray-200";
                 row.innerHTML = `
                     <div class="flex-grow">
-                        <input type="text" class="w-full text-sm font-medium border-b border-transparent focus:border-indigo-500 outline-none" 
+                        <input type="text" class="w-full text-sm font-medium bg-transparent border-none focus:ring-0 outline-none placeholder-gray-400" 
                             value="${test.name}" placeholder="Test Name" oninput="updateTest(${index}, 'name', this.value)">
                     </div>
-                    <div class="w-24">
-                        <input type="number" class="w-full text-sm text-right border-b border-transparent focus:border-indigo-500 outline-none" 
-                            value="${test.price}" placeholder="0.00" oninput="updateTest(${index}, 'price', this.value)">
+                    <div class="w-20">
+                        <input type="number" class="w-full text-sm text-right bg-transparent border-none focus:ring-0 outline-none placeholder-gray-400" 
+                            value="${test.price}" placeholder="0" oninput="updateTest(${index}, 'price', this.value)">
                     </div>
-                    <button onclick="removeTest(${index})" class="text-red-400 hover:text-red-600 px-2">
-                        <i class="fas fa-trash-alt"></i>
+                    <button onclick="removeTest(${index})" class="text-gray-400 hover:text-red-500 px-2 transition">
+                        <i class="fas fa-times"></i>
                     </button>
                 `;
                 container.appendChild(row);
@@ -491,7 +641,6 @@
         function addTestRow() {
             tests.push({ name: "", price: 0 });
             renderTestsInputs();
-            updateBill(); // Re-render bill immediately so empty row shows (optional)
         }
 
         function removeTest(index) {
@@ -507,44 +656,65 @@
 
         // --- MAIN RENDER LOGIC ---
         function updateBill() {
-            // 1. Header
+            // 1. Header Area
             const headerType = document.querySelector('input[name="headerType"]:checked').value;
             const headerContainer = document.getElementById('view-header-container');
+            const billNo = document.getElementById('input-bill-no').value;
+            
+            // Format Date
+            const dateVal = document.getElementById('input-date').value;
+            let dateStr = "---";
+            if(dateVal) {
+                const d = new Date(dateVal);
+                dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + 
+                          ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+
+            const metaHtml = `
+                <div class="invoice-meta">
+                    <div class="mb-3">
+                        <div class="meta-label">Invoice No</div>
+                        <div class="meta-value text-indigo-700">#${billNo}</div>
+                    </div>
+                    <div>
+                        <div class="meta-label">Date</div>
+                        <div class="meta-value" style="font-size: 0.95rem;">${dateStr}</div>
+                    </div>
+                </div>
+            `;
             
             if (headerType === 'text') {
                 const labName = document.getElementById('input-lab-name').value;
                 const labAddr = document.getElementById('input-lab-address').value.replace(/\n/g, '<br>');
                 headerContainer.innerHTML = `
-                    <div class="flex-grow">
-                        <h1 class="text-2xl font-bold text-indigo-900 uppercase tracking-wider">${labName}</h1>
-                        <p class="text-gray-600 text-xs mt-1 leading-relaxed">${labAddr}</p>
+                    <div class="flex-grow pr-8">
+                        <div class="lab-title">${labName}</div>
+                        <div class="lab-details">${labAddr}</div>
                     </div>
-                    <div class="text-right">
-                        <span class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded font-bold uppercase">Original Bill</span>
-                    </div>
+                    ${metaHtml}
                 `;
             } else if (logoDataUrl) {
-                headerContainer.innerHTML = `<img src="${logoDataUrl}" style="max-height: 120px; max-width: 100%; object-fit: contain;">`;
+                headerContainer.innerHTML = `
+                    <div class="flex-grow pr-8">
+                        <img src="${logoDataUrl}" style="max-height: 80px; max-width: 300px; object-fit: contain;">
+                    </div>
+                    ${metaHtml}
+                `;
+            } else {
+                // Fallback if image selected but none uploaded
+                headerContainer.innerHTML = `<div class="flex-grow text-gray-400 italic">Upload Logo</div>${metaHtml}`;
             }
 
             // 2. Patient Info
-            document.getElementById('view-bill-no').textContent = document.getElementById('input-bill-no').value;
-            
-            const dateVal = document.getElementById('input-date').value;
-            if(dateVal) {
-                const d = new Date(dateVal);
-                document.getElementById('view-date').textContent = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            }
-
             const title = document.getElementById('input-title').value;
             const name = document.getElementById('input-name').value;
             document.getElementById('view-name').textContent = `${title} ${name}`;
             
-            document.getElementById('view-sex-age').textContent = `${document.getElementById('input-sex').value} / ${document.getElementById('input-age').value}`;
+            document.getElementById('view-sex-age').textContent = `${document.getElementById('input-age').value} / ${document.getElementById('input-sex').value}`;
             document.getElementById('view-referral').textContent = document.getElementById('input-referral').value;
             document.getElementById('view-contact').textContent = document.getElementById('input-contact').value;
             document.getElementById('view-pid').textContent = document.getElementById('input-pid').value;
-            document.getElementById('view-status').textContent = document.getElementById('input-status').value;
+            document.getElementById('view-pay-mode').textContent = document.getElementById('input-pay-mode').value;
 
             // 3. Currency Symbol
             const currency = document.getElementById('input-currency').value;
@@ -558,38 +728,32 @@
             tests.forEach((test, i) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${i + 1}</td>
-                    <td>${test.name}</td>
+                    <td>${String(i + 1).padStart(2, '0')}</td>
+                    <td>${test.name || '<span class="text-gray-300">Item Name</span>'}</td>
                     <td class="amount-col">${test.price.toFixed(2)}</td>
                 `;
                 tbody.appendChild(tr);
                 total += test.price;
             });
 
-            // Fill empty rows to make it look like a full page (optional aesthetic)
-            // if (tests.length < 5) { ... }
-
             // 5. Totals
+            document.getElementById('view-subtotal').textContent = total.toFixed(2);
             document.getElementById('view-total').textContent = total.toFixed(2);
             document.getElementById('view-words').textContent = numberToWords(total) + " only";
 
-            // 6. Payment
+            // 6. Balance Logic
             const paid = parseFloat(document.getElementById('input-paid').value) || 0;
             const balance = total - paid;
             
-            document.getElementById('view-pay-mode').textContent = document.getElementById('input-pay-mode').value;
             document.getElementById('view-paid').textContent = paid.toFixed(2);
             document.getElementById('view-balance').textContent = balance.toFixed(2);
             
-            // Helper styling for balance
-            const balContainer = document.getElementById('balance-container');
-            if (balance <= 0) {
-                balContainer.classList.remove('text-red-600');
-                balContainer.classList.add('text-green-600');
-                // document.getElementById('view-balance').textContent = "PAID";
+            const balRow = document.getElementById('balance-row');
+            if (balance <= 0.5) { // floating point tolerance
+                balRow.style.color = "#166534"; // Green
+                document.getElementById('view-balance').textContent = "0.00 (PAID)";
             } else {
-                balContainer.classList.add('text-red-600');
-                balContainer.classList.remove('text-green-600');
+                balRow.style.color = "#991b1b"; // Red
             }
         }
 
@@ -600,14 +764,13 @@
             const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
             const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
             
-            // Simplified for amounts usually seen in lab bills (up to Lakhs)
             function convert(num) {
                 if (num < 20) return units[num];
                 if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 ? " " + units[num % 10] : "");
                 if (num < 1000) return units[Math.floor(num / 100)] + " Hundred" + (num % 100 ? " and " + convert(num % 100) : "");
                 if (num < 100000) return convert(Math.floor(num / 1000)) + " Thousand" + (num % 1000 ? " " + convert(num % 1000) : "");
                 if (num < 10000000) return convert(Math.floor(num / 100000)) + " Lakh" + (num % 100000 ? " " + convert(num % 100000) : "");
-                return num; // Fallback
+                return num; 
             }
             
             return convert(Math.floor(n));
