@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Bill Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Base Page Setup */
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* The A4 Paper Look for Preview */
+        .a4-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            color: #1f2937;
+            box-sizing: border-box;
+        }
+
+        /* Invoice Specific Styles */
+        .invoice-header {
+            border-bottom: 2px solid #374151;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .info-row {
+            display: flex;
+        }
+
+        .info-label {
+            font-weight: 600;
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex-grow: 1;
+            border-bottom: 1px dotted #d1d5db;
+        }
+
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .bill-table th {
+            border-top: 2px solid #374151;
+            border-bottom: 2px solid #374151;
+            padding: 0.5rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .bill-table td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .bill-table td.amount-col {
+            text-align: right;
+        }
+
+        .total-section {
+            border-top: 2px solid #374151;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .amount-in-words {
+            font-style: italic;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .footer-section {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Print Media Query - THE MOST IMPORTANT PART */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            
+            /* Hide the sidebar/controls */
+            #controls-column, #print-btn-container {
+                display: none !important;
+            }
+
+            /* Make the invoice take up the full page */
+            #preview-column {
+                width: 100% !important;
+                padding: 0 !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .a4-page {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                min-height: auto;
+                padding: 10mm; /* Adjust for printer margins */
+            }
+
+            /* Ensure background colors print if checked in settings */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- LEFT SIDE: CONTROLS -->
+    <div id="controls-column" class="w-1/3 bg-white border-r border-gray-200 controls-panel p-6 shadow-lg z-10">
+        <h2 class="text-2xl font-bold mb-6 text-indigo-700 flex items-center">
+            <i class="fas fa-flask mr-2"></i> Lab Bill Config
+        </h2>
+
+        <!-- Tab Navigation -->
+        <div class="flex mb-4 border-b">
+            <button onclick="switchTab('lab')" class="tab-btn active px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600 focus:outline-none">Lab Info</button>
+            <button onclick="switchTab('patient')" class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600 focus:outline-none">Patient</button>
+            <button onclick="switchTab('tests')" class="tab-btn px-4 py-2 font-medium text-gray-500 hover:text-indigo-600 focus:outline-none">Tests</button>
+        </div>
+
+        <!-- LAB INFO SECTION -->
+        <div id="tab-lab" class="space-y-4 tab-content">
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Header Type</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="headerType" value="text" checked onchange="toggleHeaderType()" class="text-indigo-600">
+                        <span>Text Header</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="radio" name="headerType" value="image" onchange="toggleHeaderType()" class="text-indigo-600">
+                        <span>Upload Logo/Image</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Text Header Inputs -->
+            <div id="text-header-inputs" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Lab Name</label>
+                    <input type="text" id="input-lab-name" class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="e.g. AJITH CLINICAL LAB" value="CITY DIAGNOSTIC CENTRE">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Address / Subtitle</label>
+                    <textarea id="input-lab-address" class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 outline-none" rows="2" placeholder="Address line 1, Phone number...">123, Main Road, City Name - 560001&#10;Ph: 9988776655 | Email: lab@example.com</textarea>
+                </div>
+            </div>
+
+            <!-- Image Header Inputs -->
+            <div id="image-header-inputs" class="hidden space-y-3">
+                <label class="block text-xs font-bold text-gray-500 uppercase">Upload Header Image</label>
+                <input type="file" id="input-header-img" accept="image/*" class="w-full p-2 border rounded bg-gray-50" onchange="handleImageUpload(this)">
+                <p class="text-xs text-gray-500">Recommended: A wide image (approx 800x150px)</p>
+            </div>
+            
+            <div class="pt-4 border-t">
+                <label class="block text-xs font-bold text-gray-500 uppercase">Currency Symbol</label>
+                <input type="text" id="input-currency" class="w-20 p-2 border rounded" value="₹">
+            </div>
+        </div>
+
+        <!-- PATIENT INFO SECTION -->
+        <div id="tab-patient" class="space-y-3 hidden tab-content">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Bill No.</label>
+                    <input type="text" id="input-bill-no" class="w-full p-2 border rounded" value="1-124283">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Date</label>
+                    <input type="datetime-local" id="input-date" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase">Patient Name</label>
+                <div class="flex gap-2">
+                    <select id="input-title" class="p-2 border rounded w-20">
+                        <option>Mr.</option>
+                        <option selected>Mrs.</option>
+                        <option>Ms.</option>
+                        <option>Mast.</option>
+                        <option>Baby</option>
+                    </select>
+                    <input type="text" id="input-name" class="flex-1 p-2 border rounded" value="SUDHA L">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Age</label>
+                    <input type="text" id="input-age" class="w-full p-2 border rounded" value="41">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Sex</label>
+                    <select id="input-sex" class="w-full p-2 border rounded">
+                        <option>Male</option>
+                        <option selected>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase">Patient ID / UHID</label>
+                <input type="text" id="input-pid" class="w-full p-2 border rounded" value="119828">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase">Referral By</label>
+                <input type="text" id="input-referral" class="w-full p-2 border rounded" value="Dr. Self / Walk-in">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase">Contact No.</label>
+                <input type="text" id="input-contact" class="w-full p-2 border rounded" value="9047313909">
+            </div>
+             <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase">Status</label>
+                 <select id="input-status" class="w-full p-2 border rounded">
+                    <option selected>Completed</option>
+                    <option>Pending</option>
+                    <option>Partial</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- TESTS SECTION -->
+        <div id="tab-tests" class="space-y-4 hidden tab-content">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-bold text-gray-700">Test Items</h3>
+                <button onclick="addTestRow()" class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700 transition">
+                    <i class="fas fa-plus"></i> Add Test
+                </button>
+            </div>
+
+            <div id="tests-container" class="space-y-2">
+                <!-- Test rows will be added here by JS -->
+            </div>
+            
+            <div class="border-t pt-4 mt-4 bg-gray-50 p-3 rounded">
+                <h3 class="font-bold text-gray-700 mb-2">Payment Details</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                         <label class="block text-xs font-bold text-gray-500 uppercase">Mode</label>
+                         <select id="input-pay-mode" class="w-full p-2 border rounded bg-white">
+                             <option selected>CASH</option>
+                             <option>UPI</option>
+                             <option>CARD</option>
+                             <option>NET BANKING</option>
+                         </select>
+                    </div>
+                     <div>
+                         <label class="block text-xs font-bold text-gray-500 uppercase">Paid Amount</label>
+                         <input type="number" id="input-paid" class="w-full p-2 border rounded" value="0" oninput="updateBill()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t">
+            <button onclick="window.print()" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold text-lg shadow hover:bg-green-700 transition flex items-center justify-center">
+                <i class="fas fa-print mr-2"></i> Print Bill
+            </button>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: PREVIEW -->
+    <div id="preview-column" class="w-2/3 bg-gray-200 h-screen overflow-y-auto flex justify-center py-10 relative">
+        
+        <!-- The Actual Invoice Page -->
+        <div id="invoice" class="a4-page text-sm">
+            
+            <!-- Dynamic Header -->
+            <div class="invoice-header flex justify-between items-start" id="view-header-container">
+                <!-- Will be populated by JS (either text or image) -->
+            </div>
+
+            <!-- Patient Grid -->
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Bill No.:</span>
+                    <span class="info-value" id="view-bill-no"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date:</span>
+                    <span class="info-value" id="view-date"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value" id="view-name"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sex / Age:</span>
+                    <span class="info-value" id="view-sex-age"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Referral:</span>
+                    <span class="info-value" id="view-referral"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Contact:</span>
+                    <span class="info-value" id="view-contact"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value" id="view-status"></span>
+                </div>
+                 <div class="info-row">
+                    <span class="info-label">ID / UHID:</span>
+                    <span class="info-value" id="view-pid"></span>
+                </div>
+            </div>
+
+            <!-- Tests Table -->
+            <table class="bill-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Sr.</th>
+                        <th>Test Name</th>
+                        <th class="amount-col" style="width: 120px;">Price (<span class="currency-symbol">₹</span>)</th>
+                    </tr>
+                </thead>
+                <tbody id="view-test-body">
+                    <!-- Rows generated by JS -->
+                </tbody>
+                <tfoot>
+                    <tr class="total-section">
+                        <td colspan="2" style="text-align: right; font-weight: bold; padding-top: 10px;">Total Amount:</td>
+                        <td class="amount-col" style="font-weight: bold; padding-top: 10px;" id="view-total">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="amount-in-words">
+                Payable Amount (in words): <span id="view-words">Zero only</span>
+            </div>
+
+            <!-- Payment Summary & Signature -->
+            <div class="flex justify-between mt-8 border-t border-gray-300 pt-4">
+                <div class="w-1/2">
+                    <div class="mb-1"><span class="font-semibold">Payment Mode:</span> <span id="view-pay-mode">CASH</span></div>
+                    <div class="mb-1"><span class="font-semibold">Paid Amount:</span> <span class="currency-symbol">₹</span> <span id="view-paid">0.00</span></div>
+                    <div class="mb-1 text-red-600" id="balance-container"><span class="font-semibold">Balance Due:</span> <span class="currency-symbol">₹</span> <span id="view-balance">0.00</span></div>
+                </div>
+                <div class="w-1/2 text-right flex flex-col items-end justify-end">
+                    <div class="h-16"></div> <!-- Space for signature -->
+                    <div class="border-t border-black w-48 text-center pt-1 font-semibold">
+                        Cashier's Signature
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center text-xs text-gray-500">
+                <p>Use our online portal for downloading reports.</p>
+                <p>*** End of Report ***</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State
+        let tests = [
+            { name: "CBC + DIFF", price: 100 },
+            { name: "LIPID PROFILE", price: 150 },
+            { name: "HbA1C (GLYCOSYLATED HAEMOGLOBIN)", price: 150 }
+        ];
+        let logoDataUrl = null;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current date/time
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('input-date').value = now.toISOString().slice(0, 16);
+
+            // Initial Render
+            renderTestsInputs();
+            updateBill();
+            
+            // Add listeners to all static inputs for real-time updates
+            const inputs = document.querySelectorAll('#controls-column input, #controls-column select, #controls-column textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateBill);
+            });
+        });
+
+        // --- TABS LOGIC ---
+        function switchTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Show selected
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600', 'active');
+                btn.classList.add('text-gray-500');
+            });
+            event.target.classList.remove('text-gray-500');
+            event.target.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600', 'active');
+        }
+
+        // --- HEADER LOGIC ---
+        function toggleHeaderType() {
+            const type = document.querySelector('input[name="headerType"]:checked').value;
+            if (type === 'text') {
+                document.getElementById('text-header-inputs').classList.remove('hidden');
+                document.getElementById('image-header-inputs').classList.add('hidden');
+            } else {
+                document.getElementById('text-header-inputs').classList.add('hidden');
+                document.getElementById('image-header-inputs').classList.remove('hidden');
+            }
+            updateBill();
+        }
+
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoDataUrl = e.target.result;
+                    updateBill();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- TEST MANAGEMENT ---
+        function renderTestsInputs() {
+            const container = document.getElementById('tests-container');
+            container.innerHTML = '';
+            
+            tests.forEach((test, index) => {
+                const row = document.createElement('div');
+                row.className = "flex gap-2 items-center bg-white p-2 rounded shadow-sm border";
+                row.innerHTML = `
+                    <div class="flex-grow">
+                        <input type="text" class="w-full text-sm font-medium border-b border-transparent focus:border-indigo-500 outline-none" 
+                            value="${test.name}" placeholder="Test Name" oninput="updateTest(${index}, 'name', this.value)">
+                    </div>
+                    <div class="w-24">
+                        <input type="number" class="w-full text-sm text-right border-b border-transparent focus:border-indigo-500 outline-none" 
+                            value="${test.price}" placeholder="0.00" oninput="updateTest(${index}, 'price', this.value)">
+                    </div>
+                    <button onclick="removeTest(${index})" class="text-red-400 hover:text-red-600 px-2">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function addTestRow() {
+            tests.push({ name: "", price: 0 });
+            renderTestsInputs();
+            updateBill(); // Re-render bill immediately so empty row shows (optional)
+        }
+
+        function removeTest(index) {
+            tests.splice(index, 1);
+            renderTestsInputs();
+            updateBill();
+        }
+
+        function updateTest(index, field, value) {
+            tests[index][field] = field === 'price' ? parseFloat(value) || 0 : value;
+            updateBill();
+        }
+
+        // --- MAIN RENDER LOGIC ---
+        function updateBill() {
+            // 1. Header
+            const headerType = document.querySelector('input[name="headerType"]:checked').value;
+            const headerContainer = document.getElementById('view-header-container');
+            
+            if (headerType === 'text') {
+                const labName = document.getElementById('input-lab-name').value;
+                const labAddr = document.getElementById('input-lab-address').value.replace(/\n/g, '<br>');
+                headerContainer.innerHTML = `
+                    <div class="flex-grow">
+                        <h1 class="text-2xl font-bold text-indigo-900 uppercase tracking-wider">${labName}</h1>
+                        <p class="text-gray-600 text-xs mt-1 leading-relaxed">${labAddr}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded font-bold uppercase">Original Bill</span>
+                    </div>
+                `;
+            } else if (logoDataUrl) {
+                headerContainer.innerHTML = `<img src="${logoDataUrl}" style="max-height: 120px; max-width: 100%; object-fit: contain;">`;
+            }
+
+            // 2. Patient Info
+            document.getElementById('view-bill-no').textContent = document.getElementById('input-bill-no').value;
+            
+            const dateVal = document.getElementById('input-date').value;
+            if(dateVal) {
+                const d = new Date(dateVal);
+                document.getElementById('view-date').textContent = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+
+            const title = document.getElementById('input-title').value;
+            const name = document.getElementById('input-name').value;
+            document.getElementById('view-name').textContent = `${title} ${name}`;
+            
+            document.getElementById('view-sex-age').textContent = `${document.getElementById('input-sex').value} / ${document.getElementById('input-age').value}`;
+            document.getElementById('view-referral').textContent = document.getElementById('input-referral').value;
+            document.getElementById('view-contact').textContent = document.getElementById('input-contact').value;
+            document.getElementById('view-pid').textContent = document.getElementById('input-pid').value;
+            document.getElementById('view-status').textContent = document.getElementById('input-status').value;
+
+            // 3. Currency Symbol
+            const currency = document.getElementById('input-currency').value;
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = currency);
+
+            // 4. Test Table & Calculations
+            const tbody = document.getElementById('view-test-body');
+            tbody.innerHTML = '';
+            let total = 0;
+
+            tests.forEach((test, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${test.name}</td>
+                    <td class="amount-col">${test.price.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+                total += test.price;
+            });
+
+            // Fill empty rows to make it look like a full page (optional aesthetic)
+            // if (tests.length < 5) { ... }
+
+            // 5. Totals
+            document.getElementById('view-total').textContent = total.toFixed(2);
+            document.getElementById('view-words').textContent = numberToWords(total) + " only";
+
+            // 6. Payment
+            const paid = parseFloat(document.getElementById('input-paid').value) || 0;
+            const balance = total - paid;
+            
+            document.getElementById('view-pay-mode').textContent = document.getElementById('input-pay-mode').value;
+            document.getElementById('view-paid').textContent = paid.toFixed(2);
+            document.getElementById('view-balance').textContent = balance.toFixed(2);
+            
+            // Helper styling for balance
+            const balContainer = document.getElementById('balance-container');
+            if (balance <= 0) {
+                balContainer.classList.remove('text-red-600');
+                balContainer.classList.add('text-green-600');
+                // document.getElementById('view-balance').textContent = "PAID";
+            } else {
+                balContainer.classList.add('text-red-600');
+                balContainer.classList.remove('text-green-600');
+            }
+        }
+
+        // Utility: Number to Words
+        function numberToWords(n) {
+            if (n === 0) return "Zero";
+            
+            const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            
+            // Simplified for amounts usually seen in lab bills (up to Lakhs)
+            function convert(num) {
+                if (num < 20) return units[num];
+                if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 ? " " + units[num % 10] : "");
+                if (num < 1000) return units[Math.floor(num / 100)] + " Hundred" + (num % 100 ? " and " + convert(num % 100) : "");
+                if (num < 100000) return convert(Math.floor(num / 1000)) + " Thousand" + (num % 1000 ? " " + convert(num % 1000) : "");
+                if (num < 10000000) return convert(Math.floor(num / 100000)) + " Lakh" + (num % 100000 ? " " + convert(num % 100000) : "");
+                return num; // Fallback
+            }
+            
+            return convert(Math.floor(n));
+        }
+    </script>
+</body>
+</html>
