@@ -1,0 +1,800 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamEyeROpen",
+			"GroupId": "ParamGroup",
+			"Name": "Left Eye Open/Close"
+		},
+		{
+			"Id": "ParamEyeLOpen",
+			"GroupId": "ParamGroup",
+			"Name": "Right Eye Open/Close"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "ParamGroup",
+			"Name": "Eyeball X"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "ParamGroup",
+			"Name": "Eyeball Y"
+		},
+		{
+			"Id": "ParamBrowRY",
+			"GroupId": "ParamGroup",
+			"Name": "Left Brow Up/Down"
+		},
+		{
+			"Id": "ParamBrowRForm",
+			"GroupId": "ParamGroup",
+			"Name": "Left Brow Deformation"
+		},
+		{
+			"Id": "ParamBrowLY",
+			"GroupId": "ParamGroup",
+			"Name": "Right Brow Up/Down"
+		},
+		{
+			"Id": "ParamBrowLForm",
+			"GroupId": "ParamGroup",
+			"Name": "Right Brow Deformation"
+		},
+		{
+			"Id": "ParamMouthForm",
+			"GroupId": "ParamGroup",
+			"Name": "Mouth Deformation"
+		},
+		{
+			"Id": "ParamMouthOpenY",
+			"GroupId": "ParamGroup",
+			"Name": "Mouth Open/Close"
+		},
+		{
+			"Id": "ParamMouthX",
+			"GroupId": "ParamGroup",
+			"Name": "Crooked Mouth"
+		},
+		{
+			"Id": "ParamEyeBrowX",
+			"GroupId": "ParamGroup",
+			"Name": "Crooked Brow Eye"
+		},
+		{
+			"Id": "ParamCheekPuff",
+			"GroupId": "ParamGroup",
+			"Name": "Puffed Cheeks"
+		},
+		{
+			"Id": "JawOpen",
+			"GroupId": "ParamGroup",
+			"Name": "Chin Open/Close"
+		},
+		{
+			"Id": "MouthShrug",
+			"GroupId": "ParamGroup",
+			"Name": "Pursed Lips"
+		},
+		{
+			"Id": "MouthPucker",
+			"GroupId": "ParamGroup",
+			"Name": "Pouting"
+		},
+		{
+			"Id": "Param3",
+			"GroupId": "ParamGroup4",
+			"Name": "★★★★Eye Physics Separator★★★★"
+		},
+		{
+			"Id": "ParamEyeRPhysics",
+			"GroupId": "ParamGroup4",
+			"Name": "Left Eye Frame Physics"
+		},
+		{
+			"Id": "ParamEyeBallRPhysicsX",
+			"GroupId": "ParamGroup4",
+			"Name": "Left Eyeball X Physics"
+		},
+		{
+			"Id": "ParamEyeBallRPhysicsZ",
+			"GroupId": "ParamGroup4",
+			"Name": "Left Eyeball Z Physics"
+		},
+		{
+			"Id": "ParamEyeLPhysics",
+			"GroupId": "ParamGroup4",
+			"Name": "Right Eye Frame Physics"
+		},
+		{
+			"Id": "ParamEyeBallLPhysicsX",
+			"GroupId": "ParamGroup4",
+			"Name": "Right Eyeball X Physics"
+		},
+		{
+			"Id": "ParamEyeBallLPhysicsZ",
+			"GroupId": "ParamGroup4",
+			"Name": "Right Eyeball Z Physics"
+		},
+		{
+			"Id": "ParamEyeZ",
+			"GroupId": "ParamGroup4",
+			"Name": "Eye Z Deformation"
+		},
+		{
+			"Id": "ParamEyeExpression1",
+			"GroupId": "ParamGroup4",
+			"Name": "Angry-Surprised Micro Expression"
+		},
+		{
+			"Id": "ParamEyeExpression2",
+			"GroupId": "ParamGroup4",
+			"Name": "Sad-Happy Micro Expression"
+		},
+		{
+			"Id": "ParamEyeBallPhysicsX",
+			"GroupId": "ParamGroup4",
+			"Name": "Eyeball Easing X"
+		},
+		{
+			"Id": "ParamEyeBallPhysicsY",
+			"GroupId": "ParamGroup4",
+			"Name": "Eyeball Easing Y"
+		},
+		{
+			"Id": "ParamEyeTearsPhysics",
+			"GroupId": "ParamGroup4",
+			"Name": "Left Eye Tears Movement"
+		},
+		{
+			"Id": "ParamEyeTearsPhysics2",
+			"GroupId": "ParamGroup4",
+			"Name": "Left Eye Tears Opacity"
+		},
+		{
+			"Id": "ParamEyeTearsPhysics3",
+			"GroupId": "ParamGroup4",
+			"Name": "Right Eye Tears Movement"
+		},
+		{
+			"Id": "ParamEyeTearsPhysics4",
+			"GroupId": "ParamGroup4",
+			"Name": "Right Eye Tears Opacity"
+		},
+		{
+			"Id": "ParamEarRPhysicsZ",
+			"GroupId": "ParamGroup6",
+			"Name": "Left Ear Z Physics"
+		},
+		{
+			"Id": "ParamEarRPhysicsX",
+			"GroupId": "ParamGroup6",
+			"Name": "Left Ear X Physics"
+		},
+		{
+			"Id": "ParamEarRPhysicsY1",
+			"GroupId": "ParamGroup6",
+			"Name": "Left Ear Y Physics 1"
+		},
+		{
+			"Id": "ParamEarRPhysicsY2",
+			"GroupId": "ParamGroup6",
+			"Name": "Left Ear Y Physics 2"
+		},
+		{
+			"Id": "ParamEarLPhysicsZ",
+			"GroupId": "ParamGroup6",
+			"Name": "Right Ear Z Physics"
+		},
+		{
+			"Id": "ParamEarLPhysicsX",
+			"GroupId": "ParamGroup6",
+			"Name": "Right Ear X Physics"
+		},
+		{
+			"Id": "ParamEarLPhysicsY1",
+			"GroupId": "ParamGroup6",
+			"Name": "Right Ear Y Physics 1"
+		},
+		{
+			"Id": "ParamEarLPhysicsY2",
+			"GroupId": "ParamGroup6",
+			"Name": "Right Ear Y Physics 2"
+		},
+		{
+			"Id": "Param",
+			"GroupId": "ParamGroup2",
+			"Name": "★★★★Head Separator★★★★"
+		},
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "ParamGroup2",
+			"Name": "Angle X"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "ParamGroup2",
+			"Name": "Angle Y"
+		},
+		{
+			"Id": "ParamAngleZ",
+			"GroupId": "ParamGroup2",
+			"Name": "Angle Z"
+		},
+		{
+			"Id": "Param2",
+			"GroupId": "ParamGroup3",
+			"Name": "★★★★Body Separator★★★★"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "ParamGroup3",
+			"Name": "Body Rotation X"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "ParamGroup3",
+			"Name": "Body Rotation Y"
+		},
+		{
+			"Id": "ParamBodyAngleY2",
+			"GroupId": "ParamGroup3",
+			"Name": "Body Rotation Y2"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "ParamGroup3",
+			"Name": "Body Rotation Z"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "ParamGroup3",
+			"Name": "Breathing"
+		},
+		{
+			"Id": "ParamLHandPhysics1",
+			"GroupId": "ParamGroup3",
+			"Name": "Left Hand 1"
+		},
+		{
+			"Id": "ParamLHandPhysics2",
+			"GroupId": "ParamGroup3",
+			"Name": "Left Hand 2"
+		},
+		{
+			"Id": "ParamLHandPhysics3",
+			"GroupId": "ParamGroup3",
+			"Name": "Left Hand 3"
+		},
+		{
+			"Id": "ParamLHandPhysics4",
+			"GroupId": "ParamGroup3",
+			"Name": "Left Hand 4"
+		},
+		{
+			"Id": "ParamRHandPhysics1",
+			"GroupId": "ParamGroup3",
+			"Name": "Right Hand 1"
+		},
+		{
+			"Id": "ParamRHandPhysics2",
+			"GroupId": "ParamGroup3",
+			"Name": "Right Hand 2"
+		},
+		{
+			"Id": "ParamRHandPhysics3",
+			"GroupId": "ParamGroup3",
+			"Name": "Right Hand 3"
+		},
+		{
+			"Id": "ParamRHandPhysics4",
+			"GroupId": "ParamGroup3",
+			"Name": "Right Hand 4"
+		},
+		{
+			"Id": "Param4",
+			"GroupId": "ParamGroup5",
+			"Name": "★★★★Button Separator★★★★"
+		},
+		{
+			"Id": "Button1",
+			"GroupId": "ParamGroup5",
+			"Name": "Dark Face"
+		},
+		{
+			"Id": "Button2",
+			"GroupId": "ParamGroup5",
+			"Name": "Blushing"
+		},
+		{
+			"Id": "Button7",
+			"GroupId": "ParamGroup5",
+			"Name": "Heart Eyes"
+		},
+		{
+			"Id": "Button3",
+			"GroupId": "ParamGroup5",
+			"Name": "Eye Highlights Disappear"
+		},
+		{
+			"Id": "Button4",
+			"GroupId": "ParamGroup5",
+			"Name": "Crying"
+		},
+		{
+			"Id": "Param5",
+			"GroupId": "ParamGroup7",
+			"Name": "★★★★Two-Axis Separator★★★★"
+		},
+		{
+			"Id": "Param6",
+			"GroupId": "ParamGroup7",
+			"Name": "Chest Physics X1"
+		},
+		{
+			"Id": "Param7",
+			"GroupId": "ParamGroup7",
+			"Name": "Chest Physics X2"
+		},
+		{
+			"Id": "Param8",
+			"GroupId": "ParamGroup7",
+			"Name": "Chest Physics Y1"
+		},
+		{
+			"Id": "Param9",
+			"GroupId": "ParamGroup7",
+			"Name": "Chest Physics Y2"
+		},
+		{
+			"Id": "Param10",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics X1"
+		},
+		{
+			"Id": "Param11",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics X2"
+		},
+		{
+			"Id": "Param28",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics X3"
+		},
+		{
+			"Id": "Param12",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics Y1"
+		},
+		{
+			"Id": "Param13",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics Y2"
+		},
+		{
+			"Id": "Param14",
+			"GroupId": "ParamGroup7",
+			"Name": "Skirt Physics Y3"
+		},
+		{
+			"Id": "Param30",
+			"GroupId": "ParamGroup7",
+			"Name": "Necklace Physics 1"
+		},
+		{
+			"Id": "Param31",
+			"GroupId": "ParamGroup7",
+			"Name": "Necklace Physics 2"
+		},
+		{
+			"Id": "Param17",
+			"GroupId": "ParamGroup7",
+			"Name": "Left Body Physics 1"
+		},
+		{
+			"Id": "Param18",
+			"GroupId": "ParamGroup7",
+			"Name": "Left Body Physics 2"
+		},
+		{
+			"Id": "Param33",
+			"GroupId": "ParamGroup7",
+			"Name": "Left Body Physics 3"
+		},
+		{
+			"Id": "Param34",
+			"GroupId": "ParamGroup7",
+			"Name": "Right Body Physics 1"
+		},
+		{
+			"Id": "Param35",
+			"GroupId": "ParamGroup7",
+			"Name": "Right Body Physics 2"
+		},
+		{
+			"Id": "Param36",
+			"GroupId": "ParamGroup7",
+			"Name": "Right Body Physics 3"
+		},
+		{
+			"Id": "Param43",
+			"GroupId": "ParamGroup7",
+			"Name": "★★★★Hair Physics Separator★★★★"
+		},
+		{
+			"Id": "Param44",
+			"GroupId": "ParamGroup7",
+			"Name": "Left Hair Accessory Physics 1"
+		},
+		{
+			"Id": "Param45",
+			"GroupId": "ParamGroup7",
+			"Name": "Left Hair Accessory Physics 2"
+		},
+		{
+			"Id": "Param47",
+			"GroupId": "ParamGroup7",
+			"Name": "Right Hair Accessory Physics 1"
+		},
+		{
+			"Id": "Param48",
+			"GroupId": "ParamGroup7",
+			"Name": "Right Hair Accessory Physics 2"
+		},
+		{
+			"Id": "Param50",
+			"GroupId": "ParamGroup7",
+			"Name": "Front Hair Physics 1"
+		},
+		{
+			"Id": "Param51",
+			"GroupId": "ParamGroup7",
+			"Name": "Front Hair Physics 2"
+		},
+		{
+			"Id": "Param52",
+			"GroupId": "ParamGroup7",
+			"Name": "Front Hair Physics 3"
+		},
+		{
+			"Id": "Param53",
+			"GroupId": "ParamGroup7",
+			"Name": "Front Hair Physics Y1"
+		},
+		{
+			"Id": "Param54",
+			"GroupId": "ParamGroup7",
+			"Name": "Front Hair Physics Y2"
+		},
+		{
+			"Id": "Param42",
+			"GroupId": "ParamGroup7",
+			"Name": "★★★★Skinning Separator★★★★"
+		},
+		{
+			"Id": "Param_Angle_Rotation11",
+			"GroupId": "ParamGroup8",
+			"Name": "[0] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation12",
+			"GroupId": "ParamGroup8",
+			"Name": "[1] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation13",
+			"GroupId": "ParamGroup8",
+			"Name": "[2] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation14",
+			"GroupId": "ParamGroup8",
+			"Name": "[3] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation15",
+			"GroupId": "ParamGroup8",
+			"Name": "[4] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation16",
+			"GroupId": "ParamGroup8",
+			"Name": "[5] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation17",
+			"GroupId": "ParamGroup8",
+			"Name": "[6] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation18",
+			"GroupId": "ParamGroup8",
+			"Name": "[7] Left Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation19",
+			"GroupId": "ParamGroup9",
+			"Name": "[0] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation20",
+			"GroupId": "ParamGroup9",
+			"Name": "[1] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation21",
+			"GroupId": "ParamGroup9",
+			"Name": "[2] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation22",
+			"GroupId": "ParamGroup9",
+			"Name": "[3] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation23",
+			"GroupId": "ParamGroup9",
+			"Name": "[4] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation24",
+			"GroupId": "ParamGroup9",
+			"Name": "[5] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation25",
+			"GroupId": "ParamGroup9",
+			"Name": "[6] Right Braid"
+		},
+		{
+			"Id": "Param_Angle_Rotation26",
+			"GroupId": "ParamGroup9",
+			"Name": "[7] Right Braid"
+		}
+	],
+	"ParameterGroups": [
+		{
+			"Id": "ParamGroup",
+			"GroupId": "",
+			"Name": "Features"
+		},
+		{
+			"Id": "ParamGroup4",
+			"GroupId": "",
+			"Name": "Eye Physics"
+		},
+		{
+			"Id": "ParamGroup6",
+			"GroupId": "",
+			"Name": "Ear Physics"
+		},
+		{
+			"Id": "ParamGroup2",
+			"GroupId": "",
+			"Name": "Head"
+		},
+		{
+			"Id": "ParamGroup3",
+			"GroupId": "",
+			"Name": "Body"
+		},
+		{
+			"Id": "ParamGroup5",
+			"GroupId": "",
+			"Name": "Buttons"
+		},
+		{
+			"Id": "ParamGroup7",
+			"GroupId": "",
+			"Name": "Two-Axis Physics"
+		},
+		{
+			"Id": "ParamGroup8",
+			"GroupId": "",
+			"Name": "Left Braid"
+		},
+		{
+			"Id": "ParamGroup9",
+			"GroupId": "",
+			"Name": "Right Braid"
+		}
+	],
+	"Parts": [
+		{
+			"Id": "Part",
+			"Name": "Head"
+		},
+		{
+			"Id": "Part18",
+			"Name": "Body"
+		},
+		{
+			"Id": "Part32",
+			"Name": "Back Hair"
+		},
+		{
+			"Id": "PartSketch0",
+			"Name": "[ Reference Image ]"
+		},
+		{
+			"Id": "Part2",
+			"Name": "Eyebrows"
+		},
+		{
+			"Id": "Part4",
+			"Name": "Front Hair"
+		},
+		{
+			"Id": "Part5",
+			"Name": "Head Accessories"
+		},
+		{
+			"Id": "Part8",
+			"Name": "Face"
+		},
+		{
+			"Id": "Part19",
+			"Name": "Collar Right"
+		},
+		{
+			"Id": "Part20",
+			"Name": "Collar Left"
+		},
+		{
+			"Id": "Part21",
+			"Name": "Bow"
+		},
+		{
+			"Id": "Part22",
+			"Name": "Skirt Left"
+		},
+		{
+			"Id": "Part23",
+			"Name": "Skirt Right"
+		},
+		{
+			"Id": "Part24",
+			"Name": "Upper Body Clothes"
+		},
+		{
+			"Id": "Part25",
+			"Name": "Legs"
+		},
+		{
+			"Id": "Part26",
+			"Name": "Body"
+		},
+		{
+			"Id": "Part30",
+			"Name": "Left Arm"
+		},
+		{
+			"Id": "Part29",
+			"Name": "Right Arm"
+		},
+		{
+			"Id": "Part31",
+			"Name": "Clothes Back"
+		},
+		{
+			"Id": "Part33",
+			"Name": "Braid Right"
+		},
+		{
+			"Id": "Part34",
+			"Name": "Braid Left"
+		},
+		{
+			"Id": "Part6",
+			"Name": "Left"
+		},
+		{
+			"Id": "Part7",
+			"Name": "Right"
+		},
+		{
+			"Id": "Part9",
+			"Name": "Cry"
+		},
+		{
+			"Id": "Part10",
+			"Name": "Sweat"
+		},
+		{
+			"Id": "Part12",
+			"Name": "Features"
+		},
+		{
+			"Id": "Part16",
+			"Name": "Face"
+		},
+		{
+			"Id": "Part17",
+			"Name": "Ears"
+		},
+		{
+			"Id": "Part27",
+			"Name": "Chest Pattern"
+		},
+		{
+			"Id": "Part28",
+			"Name": "Shadow"
+		},
+		{
+			"Id": "Part35",
+			"Name": "Braid Left"
+		},
+		{
+			"Id": "ArtMesh147_Skinning",
+			"Name": "Rose (Skinning)"
+		},
+		{
+			"Id": "ArtMesh148_Skinning",
+			"Name": "Rose Leaf 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh149_Skinning",
+			"Name": "Rose Leaf 2 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh150_Skinning",
+			"Name": "Anti-Clip 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh151_Skinning",
+			"Name": "Anti-Clip 2 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh152_Skinning",
+			"Name": "Braid 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh153_Skinning",
+			"Name": "Braid 2 (Skinning)"
+		},
+		{
+			"Id": "Part13",
+			"Name": "Left Eye"
+		},
+		{
+			"Id": "Part3",
+			"Name": "Right Eye"
+		},
+		{
+			"Id": "Part14",
+			"Name": "Nose"
+		},
+		{
+			"Id": "Part15",
+			"Name": "Mouth"
+		},
+		{
+			"Id": "ArtMesh147_Skinning2",
+			"Name": "Rose (Skinning)"
+		},
+		{
+			"Id": "ArtMesh148_Skinning2",
+			"Name": "Rose Leaf 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh149_Skinning2",
+			"Name": "Rose Leaf 2 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh150_Skinning2",
+			"Name": "Anti-Clip 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh151_Skinning2",
+			"Name": "Anti-Clip 2 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh152_Skinning2",
+			"Name": "Braid 1 (Skinning)"
+		},
+		{
+			"Id": "ArtMesh153_Skinning2",
+			"Name": "Braid 2 (Skinning)"
+		}
+	]
+}

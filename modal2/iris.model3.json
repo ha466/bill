@@ -1,0 +1,25 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "iris.moc3",
+		"Textures": [
+			"texter/texture_00.png",
+			"texter/texture_01.png",
+			"texter/texture_02.png"
+		],
+		"Physics": "iris.physics3.json",
+		"DisplayInfo": "iris.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}
